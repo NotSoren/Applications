@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#apt autoclean --yes -qq
+#apt autoremove --yes -qq
+pushBin | egrep -iv "'"
+echo
+if [ $(($(date +"%s") - $(stat -c %Y ~/.bashrc_backup))) -gt 21600 ]
+then
+    cp ~/.bashrc ~/.bashrc_backup
+    echo '.bashrc_backup older than 6h, making new backup. '
+    chown soren ~/.bashrc_backup
+    chown soren ~/.bashrc
+else
+    echo '.bashrc_backup is less than 6h old, no backup made. '
+fi
+cp ~/.bashrc ~/.bashrc-backup
+chown soren .bashrc-backup
+cp ~/.bashrc /root/.bashrc && echo && echo .bashrc pushed to root.
+cat /etc/fstab | sed 's/nofail,//g' |sed 's/nofail//g' | sed 's/defaults/defaults,nofail/g' | sed 's/, / /g' > /tmp/fstab.tmp && mv /tmp/fstab.tmp /etc/fstab && echo fstab updated to nofail && echo
+apt dist-upgrade --yes
+apt update --yes
+apt upgrade --yes
+apt autoclean --yes -qq
+apt autoremove --yes -qq

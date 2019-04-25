@@ -1,0 +1,3 @@
+#!/bin/bash
+
+showmanual | while read f; do echo $f $(($(apt-cache rdepends $f --installed | egrep -iv ':' | wc -l)-1)); done

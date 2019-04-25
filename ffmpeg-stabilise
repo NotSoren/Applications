@@ -1,0 +1,10 @@
+#!/bin/bash
+
+namepart=${1:0:-4}
+o='Out'
+fileExt=${1:(-4)}
+namepart=$namepart$o$fileExt
+#ext=echo ${1} | egrep -io '\.[a-z0-9]{3,}' 
+#echo $ext
+
+ffmpeg -i $1 -vf deshake $namepart

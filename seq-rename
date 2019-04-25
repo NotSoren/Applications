@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ -d renamed ]
+then
+    rm -rf renamed/*
+else
+    mkdir renamed
+fi 
+
+ls -vp | egrep -v '/$' | cat -n | while read n f; do ext=$(echo "$f" | egrep -io "\.[a-z0-9]*$"); cp -v -n "$f" "renamed/$n$ext" | egrep -io "'.*'.*'.*'"; done

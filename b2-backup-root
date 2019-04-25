@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#umount /dev/sdb4
+duplicity --exclude-other-filesystems --exclude /home/$USER/.cache/duplicity --exclude /proc --no-encryption --progress / $B2_PATH
+#mount /dev/sdb4

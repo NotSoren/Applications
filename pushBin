@@ -1,0 +1,3 @@
+#!/bin/bash
+
+chmod u+x ~/bin/* && cp -v ~/bin/* /usr/bin && echo '~/bin pushed to /usr/bin'

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+sudo apt install --yes -q ${1} >/dev/null 2> /dev/null
+${1}
+sudo apt purge --yes -q ${1}   >/dev/null 2> /dev/null
+#sudo apt autoclean --yes -qq   >/dev/null 2> /dev/null
+sudo apt autoremove --yes -qq  >/dev/null 2> /dev/null

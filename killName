@@ -1,0 +1,17 @@
+#!/bin/bash
+input=${1:0}
+#| egrep -i $USER |
+task=$(ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' | tail -1)
+echo
+echo $task
+echo
+#cat $task | while read $tmp
+taskarg=$(echo $task | egrep -o '[^:]*$'| sed 's/^.. //    ')
+taskpid=$(echo $task | egrep -o '^[0-9]*' | sed 's/^.. //    ')
+read -p "Are you sure you want to kill $taskarg with PID $taskpid?" -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    echo "Killing PID $taskpid..."
+    kill -9 $taskpid && echo "Killed"
+fi
