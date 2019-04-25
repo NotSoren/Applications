@@ -1,5 +1,5 @@
 #!/bin/bash
-input=${1:0}
+input=${1}
 #| egrep -i $USER |
 task=$(ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' | tail -1)
 echo
