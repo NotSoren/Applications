@@ -1,3 +1,8 @@
 #!/bin/bash
+#iam=$(whoami)
 
-chmod u+x ~/bin/* && cp -v ~/bin/* /usr/bin && echo '~/bin pushed to /usr/bin'
+if [ $(whoami) == 'root' ]; then
+    chmod u+x ~/bin/* && cp -v ~/bin/* /usr/bin && echo '~/bin pushed to /usr/bin'
+else
+    echo 'pushBin must be run as root!'
+fi

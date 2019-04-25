@@ -1,3 +1,6 @@
 #!/bin/bash
-
-sudo vmtouch -eq 2> /dev/null / & bash /home/soren/bin/clearWin10
+if [ $(whoami) != 'root' ]; then
+    echo 'clearAllCache must be run as root'
+    exit -1
+fi
+vmtouch -eq 2> /dev/null / & bash /home/soren/bin/clearWin10

@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ $(whoami) != 'root' ]; then
+    echo 'push must be run as root'
+    exit -1
+fi
 
 #umount /dev/sdb4
 duplicity --exclude-other-filesystems --no-encryption --progress ~ $B2_PATH_HOME
