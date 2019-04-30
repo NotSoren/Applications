@@ -9,26 +9,27 @@ figlet -f slant 'ndi'
 echo 'by Soren Warner'
 echo
 echo "If this doesn't work, run add-apt-repository ppa:graphics-drivers/ppa"
-echo "Please wait while the system updates..."
+echo "fetching updates..."
 apt update --yes > /dev/null 2>/dev/null && apt upgrade --yes > /dev/null 2>/dev/null
-echo "Done with updates."
+echo "updates finished"
+echo "fetching drivers..."
+ubuntu-drivers list > /tmp/drv
+echo "finished"
 
-ubuntu-drivers list | sort -nr | cat -n 
+cat /tmp/drv | sort -nr | cat -n 
 
 read -p "Choose a driver by number: " -r
 
-driver=$(ubuntu-drivers list | sort -nr | head -n $(echo $REPLY | egrep -o [0-9])| tail -1)
-#echo $driver
-
+driver=$(cat /tmp/drv | sort -nr | head -n $(echo $REPLY | egrep -o [0-9])| tail -1)
+rm tmp/drv
 read -p "Are you sure you want to install driver $driver? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     apt install $driver
     echo "done"
-    exit 0
+    exit 1
 else
     echo "Install aborted"
     exit 2
 fi
-
