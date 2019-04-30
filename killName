@@ -1,14 +1,29 @@
 #!/bin/bash
-input=${1}
-#| egrep -i $USER |
+input=${1:0}
+
 task=$(ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' | tail -1)
+
+if [ "$task" = "" ]; then
+  echo "error: task $input not found."
+  exit 2
+fi
+
+read -p "Do you want to take the first or last instance? [f/l]" -n 1 -r
 echo
-echo $task
-echo
-#cat $task | while read $tmp
+if [[ $REPLY =~ ^[Ff]$ ]]
+then
+    task=$(ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' | head -n 1)
+else
+    task=$(ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' | tail -1)
+fi
+
 taskarg=$(echo $task | egrep -o '[^:]*$'| sed 's/^.. //    ')
 taskpid=$(echo $task | egrep -o '^[0-9]*' | sed 's/^.. //    ')
-read -p "Are you sure you want to kill $taskarg with PID $taskpid?" -n 1 -r
+if [ "$taskpid" = "" ]; then
+  echo "error: task $input not found."
+  exit 2
+fi
+read -p "Are you sure you want to kill $taskarg with PID $taskpid? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
