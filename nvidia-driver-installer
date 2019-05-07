@@ -8,7 +8,7 @@ figlet -f slant 'ndi'
 #figlet 'ndi'
 echo 'by Soren Warner'
 echo
-echo "If this doesn't work, run add-apt-repository ppa:graphics-drivers/ppa"
+add-apt-repository ppa:graphics-drivers/ppa --yes > /dev/null
 echo "fetching updates..."
 apt update --yes > /dev/null 2>/dev/null && apt upgrade --yes > /dev/null 2>/dev/null
 echo "updates finished"
@@ -21,14 +21,18 @@ cat /tmp/drv | sort -nr | cat -n
 read -p "Choose a driver by number: " -r
 
 driver=$(cat /tmp/drv | sort -nr | head -n $(echo $REPLY | egrep -o [0-9])| tail -1)
-rm tmp/drv
+
 read -p "Are you sure you want to install driver $driver? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    apt install $driver
+    apt remove libnvidia* nvidia* --yes -qq
+    apt autoremove --yes -qq
+    apt install $driver --yes
+    apt update --yes -qq
+    apt upgrade --yes -qq
     echo "done"
-    exit 1
+    exit 0
 else
     echo "Install aborted"
     exit 2

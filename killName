@@ -1,28 +1,32 @@
 #!/bin/bash
 input=${1:0}
 
-task=$(ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' | tail -1)
+if [ $(whoami) != 'root' ]
+then
+    ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' > /tmp/tasks
+else
+    ps -ef | egrep -i $input |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' > /tmp/tasks
+fi
 
-if [ "$task" = "" ]; then
+# ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' > /tmp/tasks
+
+if [ "$(cat /tmp/tasks)" = "" ]; then
   echo "error: task $input not found."
   exit 2
 fi
 
-read -p "Do you want to take the first or last instance? [f/l]" -n 1 -r
-echo
-if [[ $REPLY =~ ^[Ff]$ ]]
-then
-    task=$(ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' | head -n 1)
-else
-    task=$(ps -ef | egrep -i $input | egrep -i $USER |egrep -iv 'grep' | sed 's/soren *//' | sed 's/root *//' | egrep -iv 'killname' | tail -1)
-fi
+cat /tmp/tasks | sort -nr | sed 's/^[0-9]*  *[0-9]*  *[^ ]*  *[^ ]* [^ ]*  *[^ ]* //ig' | cat -n
 
-taskarg=$(echo $task | egrep -o '[^:]*$'| sed 's/^.. //    ')
+read -p "Choose a task by number: " -r
+
+task=$(cat /tmp/tasks | sort -nr | head -n $(echo $REPLY | egrep -o [0-9]*)| tail -1)
+taskarg=$(echo $task | sed 's/^[0-9]*  *[0-9]*  *[^ ]*  *[^ ]* [^ ]*  *[^ ]* //ig')
 taskpid=$(echo $task | egrep -o '^[0-9]*' | sed 's/^.. //    ')
 if [ "$taskpid" = "" ]; then
   echo "error: task $input not found."
   exit 2
 fi
+
 read -p "Are you sure you want to kill $taskarg with PID $taskpid? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
@@ -30,3 +34,4 @@ then
     echo "Killing PID $taskpid..."
     kill -9 $taskpid && echo "Killed"
 fi
+rm /tmp/tasks

@@ -2,9 +2,11 @@
 
 if [ $(whoami) != 'root' ]; then
     echo 'push must be run as root'
-    exit -1
+    exit 2
 fi
+# echo $(printenv | egrep -i 'B2_PATH' | sed "s/=/='/gi"| sed "s/backups/Backups'/gi")
 
+B2_PATH=$(cat ~/.b2_path)
 #umount /dev/sdb4
-duplicity --exclude-other-filesystems --exclude /home/$USER/.cache/duplicity --exclude /proc --no-encryption --progress / $B2_PATH
+duplicity --exclude-other-filesystems --exclude /proc --exclude /home/$USER/.cache/duplicity --no-encryption --progress / $B2_PATH
 #mount /dev/sdb4

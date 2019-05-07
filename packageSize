@@ -1,3 +1,3 @@
 #!/bin/bash
 
-dpkg-query --show --showformat='${Installed-Size}\t${Package}\n' | sort -rh | head -25 | awk '{print $1/1024, $2}'
+dpkg-query --show --showformat='${Installed-Size}\t${Package}\n' | sort -rh | head -50 | awk '{print $1/1024, $2}'

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ $(whoami) != 'root' ]; then
+    echo 'kernel-update must be run as root'
+    exit -1
+fi
+
+push
+ukuu --install-latest --yes
+ukuu --purge-old-kernels --yes
+ukuu --install v5.0.13 --yes
+ukuu --clean-cache --yes
