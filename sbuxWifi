@@ -1,0 +1,17 @@
+#!/bin/bash
+
+sbux="Google Starbucks"
+SSID=$(getSSID)
+if [ "$SSID" != "$sbux" ]; then
+    rm -f ~/.sbuxwifistat
+    exit 2
+fi
+if [ ! -f ~/.sbuxwifistat ]
+then
+    if [ "$SSID" = "$sbux" ]; then
+        touch ~/.sbuxwifistat
+        vivaldi 192.168.1.1
+        exit 1
+    fi
+    echo "no need to check"
+fi

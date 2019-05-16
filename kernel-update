@@ -10,3 +10,5 @@ ukuu --install-latest --yes
 ukuu --purge-old-kernels --yes
 ukuu --install v5.0.13 --yes
 ukuu --clean-cache --yes
+
+reboot now

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ $(whoami) != 'root' ]; then
+    echo 'kernel-update-final must be run as root'
+    exit -1
+fi
+directory=$(pwd)
+cd ~
+./Tools/NVIDIA-Linux-x86_64-418.74.run && reboot now
+cd $directory
+

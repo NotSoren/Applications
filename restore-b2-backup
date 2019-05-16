@@ -1,0 +1,6 @@
+#!/bin/bash
+
+toRestore=${1:0}
+echo $toRestore
+sudo duplicity restore --progress --no-encryption --file-to-restore $toRestore $(cat ~/.b2_path) $toRestore 
+sudo chown --preserve-root -R soren $toRestore

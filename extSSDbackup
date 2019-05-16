@@ -1,0 +1,7 @@
+#!/bin/bash
+
+sudo duplicity --exclude-other-filesystems --exclude /proc --exclude /home/$USER/.cache/duplicity --progress / file:///mnt/speedyDisk/Backups/
+chown -R soren /home/soren/.cache/duplicity/*
+chown -R soren /mnt/speedyDisk/Backups/
+
+#toRestore='/home/soren/Desktop/history-1990-01-01.kml' && sudo duplicity restore --progress --file-to-restore $toRestore file:///mnt/speedyDisk/Backups/ $toRestore && sudo chown soren $toRestore

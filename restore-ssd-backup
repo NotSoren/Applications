@@ -1,0 +1,17 @@
+#!/bin/bash
+
+toRestore=${1:0}
+sudo chown -R soren /home/soren/.cache/duplicity/*
+sudo chown -R soren /mnt/speedyDisk/Backups/
+
+echo $toRestore
+time duplicity restore --progress --force --file-to-restore $toRestore file:///mnt/speedyDisk/Backups/ $toRestore
+#sudo chown -R soren $toRestore
+
+if [ -f $toRestore ]
+then
+    echo "Operation successful!"
+    
+else
+    echo "Operation failed!"
+fi
