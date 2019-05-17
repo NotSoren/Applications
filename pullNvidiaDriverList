@@ -1,19 +1,20 @@
 #!/bin/bash
 
-#get the current nvidia gpu
+#get the current nvidia gpu.
 gpu=$(sudo lshw -C display | egrep -io '\[geforce [gr]tx? .*\]')
 gpu=$(echo $gpu | egrep -io '[a-z0-9 ]*')
 echo $gpu
 
-#add header to the list of compatible drivers that we'll be making later. 
+#add header to the list of compatible drivers that we'll be making later.
 echo compatible drivers with $gpu: > usableDrivers
 
+#get the archive list of linux drivers.
 wget https://www.nvidia.com/object/linux-amd64-display-archive.html
 
-
-#The below section opens the downloaded file, and pulls out JUST the necessary lines for it to work. If you want to try to mess with the regexes, be my guest. 
+#open the downloaded file, and pull out JUST the necessary lines for it to work, then iterate through them, storing the lines in $a.
 cat linux-amd64-display-archive.html | egrep -i '<div class="pressItem"><h4><a href="http://www.nvidia.com/Download/driverResults.aspx/' | while read a; do 
-#getting the version and URL of the current driver in the list from the archive. 
+
+#getting the version and URL of the current driver in the list from the archive.
 dVersion=$(echo $a | egrep -io 'version: [0-9]*\.[0-9]*'| sed 's/Version: //ig')
 dUrl=$(echo $a | egrep -io 'http:.*en-us')
 
@@ -34,13 +35,15 @@ rm $dVersion
 
 done
 
-# ge
+# generate the URL for the most recent compatible driver, and download it.
 mostRecent=$(sed '2q;d' usableDrivers)
 echo $mostRecent
 newUrl=$(echo $mostRecent | egrep -io 'http:.*en-us')
 echo $newUrl
 wget 'http://us.download.nvidia.com/XFree86/Linux-x86_64/'$(echo $mostRecent | egrep -io '^[^ ]*')'/NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^ ]*')'.run'
 rm tmp linux-amd64-display-archive.html
+
+# Keeping this around just in case
 # wget $newUrl -O Recent_page
 # confirmUrl=$(cat Recent_page | egrep 'nvEventTracker' | egrep -io 'content/driverdownload.*type=titan"')
 # confirmUrl=$(echo https://www.nvidia.com/$confirmUrl)
