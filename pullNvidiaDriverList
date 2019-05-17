@@ -1,14 +1,29 @@
 #!/bin/bash
-gpu=$(sudo lshw -C display | egrep -io '\[geforce gtx .*\]')
+
+#get the current nvidia gpu
+gpu=$(sudo lshw -C display | egrep -io '\[geforce [gr]tx? .*\]')
 gpu=$(echo $gpu | egrep -io '[a-z0-9 ]*')
-#rm linux-amd64-display-archive.html
+echo $gpu
+
+#add header to the list of compatible drivers that we'll be making later. 
 echo compatible drivers with $gpu: > usableDrivers
 
 wget https://www.nvidia.com/object/linux-amd64-display-archive.html
-cat linux-amd64-display-archive.html | egrep -i '<div class="pressItem"><h4><a href="http://www.nvidia.com/Download/driverResults.aspx/' | while read a; do dVersion=$(echo $a | egrep -io 'version: [0-9]*\.[0-9]*'| sed 's/Version: //ig');dUrl=$(echo $a | egrep -io 'http:.*en-us')
 
+
+#The below section opens the downloaded file, and pulls out JUST the necessary lines for it to work. If you want to try to mess with the regexes, be my guest. 
+cat linux-amd64-display-archive.html | egrep -i '<div class="pressItem"><h4><a href="http://www.nvidia.com/Download/driverResults.aspx/' | while read a; do 
+#getting the version and URL of the current driver in the list from the archive. 
+dVersion=$(echo $a | egrep -io 'version: [0-9]*\.[0-9]*'| sed 's/Version: //ig')
+dUrl=$(echo $a | egrep -io 'http:.*en-us')
+
+#downloading the compatibility page for the driver.  
 wget http://us.download.nvidia.com/XFree86/Linux-x86_64/$dVersion/README/supportedchips.html -O $dVersion 2> /dev/null
 cat $dVersion | egrep '<td>' > tmp
+
+#checking if it's compatible, using the list. 
+#  if true, add to the list of compatible drivers.
+#  if false, move on. 
 if grep -q "$gpu" "tmp"; then
     echo $dVersion $dUrl>> usableDrivers
     echo $dVersion' Y'
@@ -18,8 +33,8 @@ fi
 rm $dVersion
 
 done
-echo $gpu
 
+# ge
 mostRecent=$(sed '2q;d' usableDrivers)
 echo $mostRecent
 newUrl=$(echo $mostRecent | egrep -io 'http:.*en-us')
