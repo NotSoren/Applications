@@ -1,13 +1,12 @@
 #!/bin/bash
 gpu=$(sudo lshw -C display | egrep -io '\[geforce gtx .*\]')
 gpu=$(echo $gpu | egrep -io '[a-z0-9 ]*')
-rm linux-amd64-display-archive.html
+#rm linux-amd64-display-archive.html
 echo compatible drivers with $gpu: > usableDrivers
 
 wget https://www.nvidia.com/object/linux-amd64-display-archive.html
-cat linux-amd64-display-archive.html | egrep -i '<div class="pressItem"><h4><a href="http://www.nvidia.com/Download/driverResults.aspx/' | while read a; do 
-dVersion=$(echo $a | egrep -io 'version: [0-9]*\.[0-9]*'| sed 's/Version: //ig')
-dUrl=$(echo $a | egrep -io 'http:.*en-us')
+cat linux-amd64-display-archive.html | egrep -i '<div class="pressItem"><h4><a href="http://www.nvidia.com/Download/driverResults.aspx/' | while read a; do dVersion=$(echo $a | egrep -io 'version: [0-9]*\.[0-9]*'| sed 's/Version: //ig');dUrl=$(echo $a | egrep -io 'http:.*en-us')
+
 wget http://us.download.nvidia.com/XFree86/Linux-x86_64/$dVersion/README/supportedchips.html -O $dVersion 2> /dev/null
 cat $dVersion | egrep '<td>' > tmp
 if grep -q "$gpu" "tmp"; then
@@ -27,13 +26,9 @@ newUrl=$(echo $mostRecent | egrep -io 'http:.*en-us')
 echo $newUrl
 wget 'http://us.download.nvidia.com/XFree86/Linux-x86_64/'$(echo $mostRecent | egrep -io '^[^ ]*')'/NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^ ]*')'.run'
 rm tmp linux-amd64-display-archive.html
-#Leaving this in in case I ever have to go through and find the driver the hard way...
-#
 # wget $newUrl -O Recent_page
 # confirmUrl=$(cat Recent_page | egrep 'nvEventTracker' | egrep -io 'content/driverdownload.*type=titan"')
 # confirmUrl=$(echo https://www.nvidia.com/$confirmUrl)
 # echo $confirmUrl
 # wget $confirmUrl -O Recent_page
 # cat Recent_page | egrep 'nvEventTracker'
-#echo 'NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^ ]*')'.run'
-sudo chmod +x 'NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^ ]*')'.run'
