@@ -20,7 +20,11 @@ dUrl=$(echo $a | egrep -io 'http:.*en-us')
 
 #downloading the compatibility page for the driver.  
 wget http://us.download.nvidia.com/XFree86/Linux-x86_64/$dVersion/README/supportedchips.html -O $dVersion 2> /dev/null
-cat $dVersion | egrep '<td>' > tmp
+cat $dVersion | egrep '<td>' > tmp1
+line=$(awk '/legacy GPUs/{ print NR; exit }' $dVersion)
+#echo $line 
+cat tmp1 | head -$line > tmp
+rm tmp1
 
 #checking if it's compatible, using the list. 
 if grep -q "$gpu" "tmp"; then
