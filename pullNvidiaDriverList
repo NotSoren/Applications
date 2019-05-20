@@ -1,17 +1,17 @@
 #!/bin/bash
 
-#get the current nvidia gpu.
+#get the current nvidia gpu. This doesn't support titan or other types of chips yet. I can't get the | operator to work in egrep for some reason. 
 gpu=$(lspci | egrep -i nvidia | egrep -io '\[geforce [gr]tx? .*\]')
 gpu=$(echo $gpu | egrep -io '[a-z0-9 ]*')
 echo $gpu
 
 #add header to the list of compatible drivers that we'll be making later.
-echo driver,url> usableDrivers.csv
+echo driver,url > compatibleDrivers.csv
 
 #get the archive list of linux drivers.
 wget https://www.nvidia.com/object/linux-amd64-display-archive.html
 
-#open the downloaded file, and pull out JUST the necessary lines for it to work, then iterate through them, storing the lines in $a.
+#open the downloaded file, and pull out JUST the necessary lines for it to work, then iterate through them, storing the lines in $a. 
 cat linux-amd64-display-archive.html | egrep -i '<div class="pressItem"><h4><a href="http://www.nvidia.com/Download/driverResults.aspx/' | while read a; do 
 
 #getting the version and URL of the current driver in the list from the archive.
@@ -25,18 +25,18 @@ cat $dVersion | egrep '<td>' > tmp
 #checking if it's compatible, using the list. 
 if grep -q "$gpu" "tmp"; then
     #if true, add to the list of compatible drivers.
-    echo $dVersion','$dUrl>> usableDrivers.csv
+    echo $dVersion','$dUrl>> compatibleDrivers.csv
     echo $dVersion' Supported'
 else
     #if false, move on. 
     echo $dVersion' Not supported'
 fi
+#removing compatibility file from folder. 
 rm $dVersion
-
 done
 
 #generate the URL for the most recent compatible driver, and download it.
-mostRecent=$(sed '2q;d' usableDrivers.csv)
+mostRecent=$(sed '2q;d' compatibleDrivers.csv)
 echo $mostRecent
 newUrl=$(echo $mostRecent | egrep -io 'http:.*en-us')
 echo $newUrl
@@ -45,7 +45,6 @@ rm tmp linux-amd64-display-archive.html
 
 #chmod the file so it can be run by the user. 
 #sudo chmod +x 'NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^ ]*')'.run'
-
 
 # Keeping this around just in case
 # wget $newUrl -O Recent_page
