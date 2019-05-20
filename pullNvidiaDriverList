@@ -40,7 +40,7 @@ mostRecent=$(sed '2q;d' usableDrivers.csv)
 echo $mostRecent
 newUrl=$(echo $mostRecent | egrep -io 'http:.*en-us')
 echo $newUrl
-wget 'http://us.download.nvidia.com/XFree86/Linux-x86_64/'$(echo $mostRecent | egrep -io '^[^ ]*')'/NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^ ]*')'.run'
+wget 'http://us.download.nvidia.com/XFree86/Linux-x86_64/'$(echo $mostRecent | egrep -io '^[^,]*')'/NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^ ]*')'.run'
 rm tmp linux-amd64-display-archive.html
 
 #chmod the file so it can be run by the user. 
