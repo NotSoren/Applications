@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #get the current nvidia gpu.
-gpu=$(sudo lshw -C display | egrep -io '\[geforce [gr]tx? .*\]')
+gpu=$(lspci | egrep -i nvidia | egrep -io '\[geforce [gr]tx? .*\]')
 gpu=$(echo $gpu | egrep -io '[a-z0-9 ]*')
 echo $gpu
 
@@ -27,9 +27,9 @@ cat $dVersion | egrep '<td>' > tmp
 #  if false, move on. 
 if grep -q "$gpu" "tmp"; then
     echo $dVersion $dUrl>> usableDrivers
-    echo $dVersion' Y'
+    echo $dVersion' Supported'
 else
-    echo $dVersion' N'
+    echo $dVersion' Not supported'
 fi
 rm $dVersion
 
@@ -44,7 +44,7 @@ wget 'http://us.download.nvidia.com/XFree86/Linux-x86_64/'$(echo $mostRecent | e
 rm tmp linux-amd64-display-archive.html
 
 #chmod the file so it can be run by the user. 
-sudo chmod +x 'NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^ ]*')'.run'
+#sudo chmod +x 'NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^ ]*')'.run'
 
 
 # Keeping this around just in case
