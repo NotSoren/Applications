@@ -6,7 +6,7 @@
 
 #get the current nvidia gpu. This doesn't support titan or other types of chips yet. I can't get the | operator to work in egrep for some reason. 
 #gpu=$(lspci | egrep -i nvidia | egrep -io '\[geforce [gr]tx? .*\]')
-gpu=$(lspci | egrep -i nvidia | egrep -io '\[((quadro|geforce [gr]tx? ).*|titan [xzvr]p?t?x?)\]')
+gpu=$(lspci | egrep -i nvidia | egrep -io '\[(((quadro|geforce [gr]tx? ).*|titan [xzvr]p?t?x?.*)|(nvs|tesla).*)\]')
 gpu=$(echo $gpu | egrep -io '[a-z0-9 ]*')
 echo $gpu
 
@@ -28,9 +28,8 @@ wget http://us.download.nvidia.com/XFree86/Linux-x86_64/$dVersion/README/support
 cat $dVersion | egrep '<td>' > tmp1
 line=$(awk '/legacy GPUs/{ print NR; exit }' $dVersion)
 #echo $line 
-cat tmp1 | head -$line > tmp
+cat tmp1 | head -$line | egrep -i '<td>[a-z]..*</td>' > tmp
 rm tmp1
-
 #checking if it's compatible, using the list. 
 if grep -q "$gpu" "tmp"; then
     #if true, add to the list of compatible drivers.
