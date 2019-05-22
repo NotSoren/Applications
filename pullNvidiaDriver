@@ -49,7 +49,7 @@ echo $mostRecent
 newUrl=$(echo $mostRecent | egrep -io 'http:.*en-us')
 echo $newUrl
 wget 'http://us.download.nvidia.com/XFree86/Linux-x86_64/'$(echo $mostRecent | egrep -io '^[^,]*')'/NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^,]*')'.run' -O 'NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^,]*')'.run'
-rm tmp linux-amd64-display-archive.html 2> /dev/null
+rm tmp linux-amd64-display-archive.html* 2> /dev/null
 
 #chmod the file so it can be run by the user. 
 if [ $(whoami) = 'root' ]; then
