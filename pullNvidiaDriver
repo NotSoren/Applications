@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #get the current nvidia gpu. This doesn't support titan or other types of chips yet. I can't get the | operator to work in egrep for some reason. 
-gpu=$(lspci | egrep -i nvidia | egrep -io '\[geforce [gr]tx? .*\]')
+#gpu=$(lspci | egrep -i nvidia | egrep -io '\[geforce [gr]tx? .*\]')
+gpu=$(lspci | egrep -i nvidia | egrep -io '\[((quadro|geforce [gr]tx? ).*|titan [xz]p?)\]')
 gpu=$(echo $gpu | egrep -io '[a-z0-9 ]*')
 echo $gpu
 
