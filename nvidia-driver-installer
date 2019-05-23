@@ -4,21 +4,38 @@ if [ $(whoami) != 'root' ]; then
     echo 'nvidia-driver-installer must be run as root'
     exit -1
 fi
+clear
 figlet -f slant 'ndi'
 #figlet 'ndi'
 echo 'by Soren Warner'
 echo
-add-apt-repository ppa:graphics-drivers/ppa --yes > /dev/null
+add-apt-repository ppa:graphics-drivers/ppa --yes > /dev/null 2> /dev/null
 echo "fetching updates..."
 apt update --yes > /dev/null 2>/dev/null && apt upgrade --yes > /dev/null 2>/dev/null
 echo "updates finished"
 echo "fetching drivers..."
 ubuntu-drivers list > /tmp/drv
 echo "finished"
-
+echo "     0  most recent compatible driver on nvidia's website"
 cat /tmp/drv | sort -nr | cat -n 
 
 read -p "Choose a driver by number: " -r
+
+if [ $REPLY = '0' ]; then 
+    sudo pullNvidiaDriver
+    read -p "Are you sure you want to install driver $(sed '2q;d' compatibleDrivers.csv|egrep -io '^[0-9]*\.[0-9]*')? " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        ./NVIDIA-Linux-x86_64-$(sed '2q;d' compatibleDrivers.csv|egrep -io '^[0-9]*\.[0-9]*').run
+        rm -f NVIDIA-Linux-x86_64-$(sed '2q;d' compatibleDrivers.csv|egrep -io '^[0-9]*\.[0-9]*').run compatibleDrivers.csv
+        
+        exit $?
+    else
+        echo "Install aborted"
+        exit 4
+    fi
+fi
 
 driver=$(cat /tmp/drv | sort -nr | head -n $(echo $REPLY | egrep -o [0-9])| tail -1)
 
