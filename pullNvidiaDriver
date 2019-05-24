@@ -9,6 +9,10 @@
 gpu=$(lspci | egrep -i nvidia | egrep -io '\[(((quadro|geforce [gr]tx? ).*|titan [xzvr]p?t?x?.*)|(nvs|tesla).*)\]')
 gpu=$(echo $gpu | egrep -io '[a-z0-9 ]*')
 echo $gpu
+if [ $gpu = '' ]; then 
+    echo "no compatible gpu found!"
+    exit 4
+fi
 
 #add header to the list of compatible drivers that we'll be making later.
 echo driver,url > compatibleDrivers.csv
