@@ -1,0 +1,11 @@
+#!/bin/bash
+
+function encode() { echo -n $@ | perl -pe's/([^-_.~A-Za-z0-9])/sprintf("%%%02X", ord($1))/seg'; }
+function google() { vivaldi http://www.google.com/search?hl=en#q="`encode $@`" ;}
+
+list=$(cat searchList)
+while read p; do
+  echo "$p"
+  google $p > /dev/null 2> /dev/null
+  sleep 5s
+done < searchList
