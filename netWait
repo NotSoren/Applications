@@ -1,7 +1,5 @@
 #!/bin/bash
 function checkNetwork() { ping google.com -c 4 -i .2 >/dev/null 2> /dev/null && echo up || echo down; }
-function encode() { echo -n $@ | perl -pe's/([^-_.~A-Za-z0-9])/sprintf("%%%02X", ord($1))/seg'; }
-function google() { firefox http://www.google.com/search?hl=en#q="`encode $@`" ;}
 
 while [ "$(checkNetwork)" = "down" ] ;
 do
