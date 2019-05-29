@@ -33,7 +33,6 @@ cat $dVersion | egrep '<td>' > tmp1
 line=$(awk '/legacy GPUs/{ print NR; exit }' $dVersion)
 #echo $line 
 cat tmp1 | head -$line | egrep -i '<td>[a-z]..*</td>' > tmp
-rm tmp1
 #checking if it's compatible, using the list. 
 if grep -q "$gpu" "tmp"; then
     #if true, add to the list of compatible drivers.
@@ -52,8 +51,10 @@ mostRecent=$(sed '2q;d' compatibleDrivers.csv)
 echo $mostRecent
 newUrl=$(echo $mostRecent | egrep -io 'http:.*en-us')
 echo $newUrl
+driverNumber=$(echo $mostRecent | egrep -io '^[^,]*')
+echo $driverNumber
 wget 'http://us.download.nvidia.com/XFree86/Linux-x86_64/'$(echo $mostRecent | egrep -io '^[^,]*')'/NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^,]*')'.run' -O 'NVIDIA-Linux-x86_64-'$(echo $mostRecent | egrep -io '^[^,]*')'.run'
-rm tmp linux-amd64-display-archive.html* 2> /dev/null
+rm tmp tmp1 linux-amd64-display-archive.html* 2> /dev/null
 
 #chmod the file so it can be run by the user. 
 if [ $(whoami) = 'root' ]; then

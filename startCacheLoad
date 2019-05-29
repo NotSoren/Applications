@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vmtouch -tq /home/soren/Documents
+# vmtouch -tq /home/soren/Documents
 vmtouch -tq /usr/bin
-vmtouch -tq /opt/vivaldi
+# vmtouch -tq /opt/vivaldi
 vmtouch -tq /bin

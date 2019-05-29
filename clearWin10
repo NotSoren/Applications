@@ -3,4 +3,4 @@ if [ $(whoami) != 'root' ]; then
     echo 'clearWin10 must be run as root'
     exit -1
 fi
-vmtouch -eq 2> /dev/null /home/soren/Desktop/Win10
+vmtouch -eq 2> /dev/null /home/soren/win10
