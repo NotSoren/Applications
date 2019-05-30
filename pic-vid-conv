@@ -1,0 +1,14 @@
+#!/bin/bash
+if [ -d renamed ]
+then
+    rm -rf renamed/*
+else
+    mkdir renamed
+fi
+
+ls -vp | egrep -v '/$' | egrep -i '(png|jpe?g)$' | cat -n | while read n f; do ext=$(echo "$f" | egrep -io "\.[a-z0-9]*$"); cp -v -n "$f" "renamed/$n$ext" | egrep -io "'.*'.*'.*'"; done
+
+cd renamed
+ffmpeg -framerate 2 -i %0d.jpg -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4
+cd .. 
+mv renamed/output.mp4 output.mp4

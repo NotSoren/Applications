@@ -1,9 +1,9 @@
 #!/bin/bash
-function checkNetwork() { ping google.com -c 4 -i .2 >/dev/null 2> /dev/null && echo up || echo down; }
+function checkNetwork() { ping google.com -c 2 -i .2 >/dev/null 2> /dev/null && echo up || echo down; }
 
 while [ "$(checkNetwork)" = "down" ] ;
 do
       sleep 2
-      echo "network down!"
+      echo "network down"
 done
-echo "all good!"
+echo "network up"
