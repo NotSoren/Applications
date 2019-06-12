@@ -9,6 +9,7 @@ figlet -f slant 'ndi'
 #figlet 'ndi'
 echo 'by Soren Warner'
 echo
+echo 'ensuring repository exists'
 add-apt-repository ppa:graphics-drivers/ppa --yes > /dev/null 2> /dev/null
 echo "fetching updates..."
 apt update --yes > /dev/null 2>/dev/null && apt upgrade --yes > /dev/null 2>/dev/null
@@ -17,7 +18,7 @@ echo "fetching drivers..."
 ubuntu-drivers list > /tmp/drv
 echo "finished"
 echo "     0  most recent compatible driver on nvidia's website"
-cat /tmp/drv | sort -nr | cat -n 
+cat /tmp/drv | sort -nr | cat -n
 
 read -p "Choose a driver by number: " -r
 
@@ -28,9 +29,9 @@ if [ $REPLY = '0' ]; then
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
         ./NVIDIA-Linux-x86_64-$(sed '2q;d' compatibleDrivers.csv|egrep -io '^[0-9]*\.[0-9]*').run
+        stat=$?
         rm -f NVIDIA-Linux-x86_64-$(sed '2q;d' compatibleDrivers.csv|egrep -io '^[0-9]*\.[0-9]*').run compatibleDrivers.csv
-        
-        exit $?
+        exit $stat
     else
         echo "Install aborted"
         exit 4

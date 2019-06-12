@@ -8,6 +8,6 @@ fi
 
 B2_PATH=$(cat ~/.b2_path)
 #umount /dev/sdb4
-duplicity --exclude-other-filesystems --exclude /tmp --exclude /proc --exclude /home/$USER/.cache/duplicity --no-encryption --progress / $B2_PATH
+duplicity --exclude-other-filesystems --asynchronous-upload --exclude /tmp --exclude /proc --exclude /home/$USER/.cache/duplicity --no-encryption --progress / $B2_PATH
 #mount /dev/sdb4
 chown -R soren /home/soren/.cache/duplicity/*
