@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo duplicity --asynchronous-upload --exclude-other-filesystems --no-compression --exclude /proc --exclude /tmp --exclude /home/$USER/.cache/duplicity --progress / file:///mnt/speedyDisk/Backups/
+sudo duplicity --asynchronous-upload --exclude-other-filesystems --exclude /proc --exclude /tmp --exclude /home/$USER/.cache/duplicity --progress / file:///mnt/speedyDisk/Backups/
 chown -R soren /home/soren/.cache/duplicity/*
 chown -R soren /mnt/speedyDisk/Backups/
 
