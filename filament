@@ -1,13 +1,26 @@
 #!/bin/bash
 
-length=$(cat ${1:0} | egrep -io 'E[0-9]{1,}\.[0-9]{4,6}' | egrep -io "[0-9]*\.[0-9]*" | tail -n 1)
-lenTrue=$(expr $length*"3.0881" | bc)
-lenTM=$(expr $lenTrue*"0.001" | bc)
-echo "Length: $lenTM m ($lenTrue mm)"
-echo $length
-pi=$(bc -l <<< "scale=10; 4*a(1)")
-r=".175"
-value=$(expr $length*".30881"*$pi*$r*"0.5"*$r*"0.5" | bc)
+length=$(cat ${1:0} | egrep -i ";Filament used:" | egrep -io "[0-9]{0,}\.[0-9]{1,}")
+if [ "$length" == '' ]; then
+    echo path1
+    length=$(cat ${1:0} | egrep -io 'E[0-9]{1,}\.[0-9]{4,6}' | egrep -io "[0-9]*\.[0-9]*" | tail -n 1)
+    lenTrue=$(expr $length*"1" | bc)
+    lenTM=$(expr $lenTrue*"0.001" | bc)
+    echo "Length: $lenTM m ($lenTrue mm)"
+    echo $length
+    pi=$(bc -l <<< "scale=10; 4*a(1)")
+    r=".175"
+    value=$(expr $length*$pi*$r*"0.5"*$r*"0.5" | bc)
+else
+    echo path2
+    lenTrue=$(expr $length*"1000" | bc)
+    lenTM=$(expr $length*"1" | bc)
+    echo "Length: $lenTM m ($lenTrue mm)"
+    echo $length
+    pi=$(bc -l <<< "scale=10; 4*a(1)")
+    r="1.75"
+    value=$(expr $lenTrue*$pi*$r*"0.5"*$r*"0.5"*"0.001" | bc)
+fi
 echo "Volume: $value cm^3"
 plaM=$(expr $value*"1.24" | bc)
 petM=$(expr $value*"1.27" | bc)
