@@ -1,5 +1,15 @@
 #!/bin/bash
 
-length=$(cat ${1:0} | egrep -io 'E[0-9]{1,}\.[0-9]{5,6}' | egrep -io "[0-9]*\.[0-9]*" | tail -n 1)
-echo "length: $length"
+length=$(cat ${1:0} | egrep -io 'E[0-9]{1,}\.[0-9]{4,6}' | egrep -io "[0-9]*\.[0-9]*" | tail -n 1)
+lenTrue=$(expr $length*"3.0881" | bc)
+lenTM=$(expr $lenTrue*"0.001" | bc)
+echo "Length: $lenTM m ($lenTrue mm)"
+echo $length
 pi=$(bc -l <<< "scale=10; 4*a(1)")
+r=".175"
+value=$(expr $length*".30881"*$pi*$r*"0.5"*$r*"0.5" | bc)
+echo "Volume: $value cm^3"
+plaM=$(expr $value*"1.24" | bc)
+petM=$(expr $value*"1.27" | bc)
+echo "PLA Mass: $plaM"
+echo "PETG Mass: $petM"

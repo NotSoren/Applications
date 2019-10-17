@@ -1,0 +1,10 @@
+#!/bin/bash
+function checkNetwork() { ping nc.local -c 2 -i .2 >/dev/null 2> /dev/null && echo up || echo down; }
+
+while [ "$(checkNetwork)" = "down" ] ;
+do
+      sleep 2
+      echo "printer down"
+done
+echo "printer up"
+

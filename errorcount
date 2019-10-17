@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Unrecoverable errors:"
+cat /sys/devices/system/edac/mc/mc*/ue_count
+echo "Recoverable errors:"
+cat /sys/devices/system/edac/mc/mc*/ce_count
+
